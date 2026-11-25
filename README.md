@@ -1,118 +1,101 @@
-<div align="center">
+# LLM Council Pro
 
-# 🏛️ LLM Council Pro
+A Claude skill for high-stakes decisions. It sends a question to five advisors that use different reasoning methods, has them review each other anonymously, asks a devil's advocate to attack the emerging consensus, and ends with a chairman's verdict and one concrete first step.
 
-### Stop asking one AI. Ask a council.
+[How it works](#how-it-works) · [Installation](#installation) · [Usage](#usage) · [Differences from LLM Council](#differences-from-llm-council) · [FAQ](#faq)
 
-**A Claude skill that runs your hardest decisions through 5 AI advisors, anonymous peer review, and a devil's advocate — then gives you one clear verdict and one first step.**
+## Motivation
 
-![Claude Skill](https://img.shields.io/badge/Claude-Skill-D97757?style=for-the-badge)
-![Works in claude.ai](https://img.shields.io/badge/works%20in-claude.ai-191919?style=for-the-badge)
-![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-5A67D8?style=for-the-badge)
-![No API key](https://img.shields.io/badge/API%20key-not%20needed-2EA44F?style=for-the-badge)
-![License MIT](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
+Language models tend to follow the framing of a question. Asked whether an idea is good, they lean towards yes; asked whether it is bad, they lean towards no. For decisions that are costly or hard to reverse, such as a career move, a large purchase or a product launch, a single answer is not a reliable basis.
 
-[How it works](#-how-it-works) · [Install](#-install) · [Usage](#-usage) · [What's new vs LLM Council](#-whats-different-from-the-original-llm-council) · [FAQ](#-faq)
+LLM Council Pro adds structure to the process:
 
-</div>
+- Five advisors, each with a distinct reasoning method rather than only a different persona
+- Anonymous peer review, so no advisor is favoured by name or position
+- A devil's advocate that argues against the consensus
+- A chairman who scores each criterion separately before giving a definite recommendation
 
----
-
-## 😬 The problem
-
-Ask an AI *"Is this a good idea?"* and it leans yes.
-Ask *"Is this a bad idea?"* and it leans no.
-
-Same question, opposite answers. AI models tend to **agree with how you frame the question**. For decisions that matter — a job, a big purchase, a launch, a career move — that's dangerous.
-
-## ✅ The fix
-
-LLM Council Pro makes Claude argue with itself — on purpose, with structure:
-
-- **5 advisors** with 5 different *reasoning methods* (not just personas)
-- **Anonymous peer review** so no advisor gets favored by name
-- **A devil's advocate** that attacks whatever the council agrees on
-- **A chairman** who scores each criterion separately, then gives a real answer — not "it depends"
-
----
-
-## 🔄 How it works
+## How it works
 
 ```mermaid
 flowchart LR
-    Q[Your decision] --> F[Neutral framing]
+    Q[Decision] --> F[Neutral framing]
     F --> A1[Contrarian]
     F --> A2[First Principles]
     F --> A3[Expansionist]
     F --> A4[Outsider]
     F --> A5[Executor]
     A1 & A2 & A3 & A4 & A5 --> R[Anonymous peer review]
-    R --> D[Devil's advocate<br/>attacks the consensus]
-    D --> C[Chairman verdict]
-    C --> V[✅ Recommendation<br/>+ one first step]
+    R --> D[Devil's advocate]
+    D --> C[Chairman]
+    C --> V[Recommendation and first step]
 ```
 
-### The 5 advisors
+1. **Framing.** The question is rewritten as a neutral prompt: the decision, the options, the constraints, and what is at stake.
+2. **Advisors.** Five sub-agents answer in parallel, each from its own angle, and give a confidence score.
+3. **Peer review.** The answers are anonymised and shuffled. Five reviewers identify the strongest answer, the largest blind spot, and what all answers missed.
+4. **Devil's advocate.** One agent builds the strongest case against the emerging consensus.
+5. **Verdict.** The chairman scores five criteria, addresses the devil's advocate, and gives a recommendation with a stated confidence level.
 
-| Advisor | Asks | Reasoning method |
+### The advisors
+
+| Advisor | Question | Method |
 |---|---|---|
-| 🔴 **The Contrarian** | What will fail? | **Inversion** — imagine it failed a year later, trace back why |
-| 🔵 **First Principles Thinker** | What are we *actually* solving? | **Decomposition** — break it into assumptions, challenge each |
-| 🟢 **The Expansionist** | What upside are we missing? | **Analogy** — how did other fields solve this? |
-| 🟡 **The Outsider** | Does this make sense to a stranger? | **Naive questions** — catches the curse of knowledge |
-| 🟣 **The Executor** | What do you do Monday morning? | **Critical path** + outside view (how it usually goes) |
+| Contrarian | What will fail? | Inversion: assume the decision failed a year later and trace back the causes |
+| First Principles Thinker | What is actually being solved? | Decomposition: break the question into assumptions and test each one |
+| Expansionist | What upside is being missed? | Analogy: how other fields solved a similar problem |
+| Outsider | Does this make sense without context? | Naive questions: flags what only insiders would accept |
+| Executor | What happens on Monday morning? | Critical path, plus an outside view of how similar cases usually go |
 
----
+## Differences from LLM Council
 
-## ✨ What's different from the original LLM Council
-
-| Feature | LLM Council | **LLM Council Pro** |
+| Feature | LLM Council | LLM Council Pro |
 |---|:---:|:---:|
-| 5 advisors + anonymous peer review | ✅ | ✅ |
-| Distinct reasoning method per advisor | ❌ | ✅ |
-| Devil's advocate attacks the consensus | ❌ | ✅ |
-| Anti-sycophancy rule in every prompt | ❌ | ✅ |
-| Criteria scored separately before the verdict | ❌ | ✅ |
-| Confidence score per advisor | ❌ | ✅ |
-| Quick mode (5 agents instead of 12) | ❌ | ✅ |
-| Only runs when you ask (no surprise usage) | ❌ | ✅ |
-| Verdict in chat, no files created | depends on version | ✅ |
+| Five advisors and anonymous peer review | Yes | Yes |
+| Distinct reasoning method per advisor | No | Yes |
+| Devil's advocate against the consensus | No | Yes |
+| Anti-sycophancy rule in every prompt | No | Yes |
+| Criteria scored separately before the verdict | No | Yes |
+| Confidence score per advisor | No | Yes |
+| Quick mode (5 agents instead of 12) | No | Yes |
+| Runs only on explicit request | No | Yes |
+| Verdict shown in the chat, no files created | Varies by version | Yes |
 
----
+## Installation
 
-## 📦 Install
+**claude.ai and the Claude apps**
 
-### claude.ai / Claude app
-1. Download this repository as a ZIP (green **Code** button → **Download ZIP**)
-2. In Claude, open the skills section of your settings and upload the skill
-3. Done — start a new chat
+1. Download the repository as a ZIP file (**Code**, then **Download ZIP**).
+2. Upload it in the skills section of your Claude settings.
+3. Start a new conversation.
 
-### Claude Code
+**Claude Code**
+
 ```bash
 git clone https://github.com/Onliwis/llm-council-pro ~/.claude/skills/llm-council-pro
 ```
 
-No API key. No external service. No scripts. Just one `SKILL.md`.
+The skill is a single `SKILL.md` file. It needs no API key, no external service and no scripts.
 
----
+## Usage
 
-## 🚀 Usage
+Start the message with a trigger phrase, followed by the decision and as much context as possible.
 
-Start your message with a trigger, then give as much context as you can:
-
-| You type | Mode | Agents |
+| Trigger | Mode | Agents |
 |---|---|---|
-| `council this: ...` | Full | 12 |
-| `quick council: ...` | Quick | 5 |
+| `council this:` or `run the council:` | Full | 12 |
+| `quick council:` | Quick | 5 |
+
+Equivalent phrases in other languages also work, for example `conseil` in French. The council answers in the language of the request.
 
 **Example**
 
-> council this: I'm thinking of quitting my job to start a small online business. Context: 6 months of savings, no customers yet, I can work on it evenings and weekends first.
+> council this: I am considering leaving my job to start a small online business. I have six months of savings and no customers yet. I can work on it in the evenings and at weekends at first.
 
-**What you get back**
+**Output structure**
 
 ```
-## Council Verdict: Quit job for business
+## Council Verdict: Leave job for business
 
 ### Scores by criterion
 Risk 3/5 · Reversibility 4/5 · Cost 2/5 · Upside 4/5 · Feasibility 3/5
@@ -125,52 +108,40 @@ Risk 3/5 · Reversibility 4/5 · Cost 2/5 · Upside 4/5 · Feasibility 3/5
 ### The one thing to do first
 ```
 
-Works in any language — the council answers in yours.
+A short summary of each advisor's position and confidence follows the verdict.
 
----
+## When to use it
 
-## 🎯 When to use it
+**Suitable for:** career choices, large purchases, business and product decisions, pricing, and testing a plan before committing to it.
 
-**Good for** — career choices · big purchases · business or product decisions · pricing · "should I quit / switch / launch?" · pressure-testing a plan
+**Not suitable for:** factual questions, writing tasks, summaries, or questions with one obvious answer. In those cases the skill says so and answers directly.
 
-**Not for** — facts · writing tasks · summaries · simple yes/no questions (it will tell you and just answer)
+## FAQ
 
----
+**Does it use other models such as GPT or Gemini?**
+No. Every role is played by Claude. The separate reasoning methods, anonymous review and devil's advocate reduce bias but do not remove it. This is the trade-off for not requiring an API key.
 
-## ❓ FAQ
+**Does it cost anything?**
+The skill is free. Each run counts against your Claude usage: 12 sub-agents in full mode, 5 in quick mode.
 
-**Does it use other AI models like GPT or Gemini?**
-No. All roles are played by Claude. The different reasoning methods, anonymous review and devil's advocate reduce bias, but they don't remove it completely. That's the trade-off for needing no API key.
+**Is it safe to install?**
+It is a single text file. It runs no code, sends nothing outside Claude and creates no files.
 
-**Does it cost money?**
-The skill is free. Each run uses part of your Claude usage limit (12 sub-agents in full mode, 5 in quick mode).
+**Can the advisors be changed?**
+Yes. Edit `SKILL.md`. The project is released under the MIT licence.
 
-**Is it safe?**
-It's a single text file. No code runs, nothing is sent outside Claude, no files are created.
+## Credits
 
-**Can I change the advisors?**
-Yes — edit `SKILL.md`. It's MIT licensed.
+- Method: Andrej Karpathy, [LLM Council](https://github.com/karpathy/llm-council)
+- Original Claude skill: Ole Lehmann, [claude-skills-llm-council](https://github.com/aiwithremy/claude-skills-llm-council)
+- Devil's advocate, anti-sycophancy rule, criterion scoring and quick mode adapted from [council-review](https://github.com/ngmeyer/skills) (MIT, © 2026 Neal Meyer)
 
----
+This is an independent project and is not affiliated with Anthropic, Andrej Karpathy or the authors listed above.
 
-## 🙏 Credits
-
-- Method: [Andrej Karpathy — LLM Council](https://github.com/karpathy/llm-council)
-- Original Claude skill: Ole Lehmann ([claude-skills-llm-council](https://github.com/aiwithremy/claude-skills-llm-council))
-- Devil's advocate, anti-sycophancy guardrail, criterion scoring and quick mode inspired by [council-review](https://github.com/ngmeyer/skills) (MIT, © 2026 Neal Meyer)
-
-Independent project. Not affiliated with Anthropic, Andrej Karpathy, or the authors above.
-
-## 📄 License
+## License
 
 [MIT](./LICENSE)
 
-<div align="center">
-
-**If this helped you make a better decision, a ⭐ helps others find it.**
-
-</div>
-
 <!--
-Keywords: claude skill, claude code skill, llm council, ai council, karpathy llm council, multi-agent debate, devil's advocate, decision making, second opinion, pressure test, stress test, red team, anti-sycophancy, sub-agents, claude.ai skills, SKILL.md
+Keywords: claude skill, claude code skill, llm council, karpathy llm council, multi-agent debate, devil's advocate, decision making, second opinion, red team, anti-sycophancy, sub-agents, SKILL.md
 -->
